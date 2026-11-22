@@ -182,7 +182,7 @@ Under the spending question in Step 2, tap the link to open **Your expenses** (i
 - One-time or specific-year costs do not belong here. Add them as life events.
 - Amounts are in today's money and are raised for inflation each year.
 - **Show my spending goal (Step 2) per** chooses whether the total, and your spending box, are shown per week, month or year.
-- Tap **Use this list**. Your spending box fills in and turns grey. To change it, tap **Edit expense list**, or **Stop using the list** to type a number yourself.
+- Tap **Save for this scenario** (the bar is always visible at the bottom; **Cancel** drops your changes). Your spending box fills in and turns grey. To change it, tap **Edit expense list**, or **Stop using the list** to type a number yourself.
 
 ## Sharing expenses in a couple
 In couple mode each row has two linked boxes, one for each of you. Type one percentage and the other adjusts so they always add up to 100%. Leave both blank to use the automatic split. **Apply to all rows** sets every row at once.
@@ -204,7 +204,7 @@ Choose **Me and my spouse** at the top of Step 1. You fill in your own form, the
 # Life events
 eyebrow: MENU
 side: events.png
-Open **Life events** from the Menu for one-time costs (a car, a roof, a wedding) or yearly extras. The plan funds them from your accounts, with the taxes that creates.
+Open **Life events** from the Menu for one-time costs (a car, a roof, a wedding) or yearly extras. The plan funds them from your accounts, with the taxes that creates. When you are done, tap **Save for this scenario** at the bottom to keep your changes, or **Cancel** to put things back as they were.
 
 - In couple mode, each event has the same linked percentage boxes, one for each of you.
 - In couple mode, **Recommend an optimized split of these events** suggests one percentage for all events on the form you have open.
