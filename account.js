@@ -23,7 +23,7 @@
     storageKey: 'awr_retireon_auth',
     lsPrefix: 'onrp',       // the planner's own localStorage prefix
     langKey: '',       // where the planner keeps EN/FR ('' = English only)
-    docs: '',                      // address of the documentation page; the link shows only when this is set
+    docs: 'guide.pdf',                    // address of the documentation page; the link shows only when this is set
     fr: false
   };
   var KDF_ITER = 600000, AAD = new TextEncoder().encode('awr-account:1:' + CFG.app);
