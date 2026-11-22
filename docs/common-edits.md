@@ -68,3 +68,10 @@ The same change usually belongs in the other planner's `account.js` too.
 - A real statement that is not read: add its layout quirk to `parseCppStatement`, add a FAKE fixture in `scripts/make_fake_statements.py`
   (never a real statement: this repo is public), and run `python3 scripts/test_statements.py`.
 - Keep it free of network calls and web addresses: `scripts/check_planner.py` fails otherwise.
+
+## 12. The tax check (scripts/test_tax.py) went red
+It compares the planner's tax engine and yearly plan with a SEPARATE calculation using its own copy of the official numbers
+(the "2026 PARAMETERS" block at the top of the script). The Actions run prints lines starting FAIL.
+- You just changed tax numbers (new year, or an edit in `getDefaultTaxRules`): update the PARAMETERS block to the same official figures. Two copies on purpose: if they disagree, one has a typo. Find which by checking the official table (canada.ca, Revenu Québec or Ontario), not by copying one into the other.
+- You did not touch tax numbers: a code change broke a calculation. Revert it or fix it, then run `python3 scripts/test_tax.py`.
+- The check does not block the site (Pages deploys on its own); it only alerts you.
