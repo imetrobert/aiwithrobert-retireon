@@ -58,3 +58,13 @@ Run `python3 scripts/check_planner.py`: it names a syntax error or duplicate id.
 Edit `account.js` only (texts are in `T`, English and French). Keep: encryption before upload, no secret keys,
 no innerHTML. Run `python3 scripts/test_account.py`. The guide is `guide.pdf` in the repo root (replace the file to update it; `CFG.docs` points at it).
 The same change usually belongs in the other planner's `account.js` too.
+
+## 11. Government statements (CPP Statement of Contributions)
+`statements.js` reads the PDF on the device (pdf.js is self-hosted in `vendor/pdfjs/`). Part 1 is the parser
+(`parseCppStatement`: rows `{year, contributions, pensionableEarnings, rawCode, isMaximum, isQPP, isPostRetirement, isPending}`,
+`YMPE` 1966-2026, `YAMPE` 2024-2026; "M" resolves to the YMPE). Part 2 is the page (Preview, then Apply).
+- Only the statement's own estimate at 65 is applied (to `cppMonthlyAmt` or `spouseCppMonthlyAmt`). A history is shown, never turned into a pension.
+- New year: add the YMPE (and YAMPE) to the two tables at the top of `statements.js` (CRA "CPP contribution rates, maximums and exemptions").
+- A real statement that is not read: add its layout quirk to `parseCppStatement`, add a FAKE fixture in `scripts/make_fake_statements.py`
+  (never a real statement: this repo is public), and run `python3 scripts/test_statements.py`.
+- Keep it free of network calls and web addresses: `scripts/check_planner.py` fails otherwise.
