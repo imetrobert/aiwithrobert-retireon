@@ -113,3 +113,9 @@ The guide is written in Markdown: `docs/guide/en.md`. Find the chapter by its `#
 - A button was renamed: search the .md for the old name and replace it everywhere.
 - Screens look different: Actions, **Guide screenshots**, Run workflow (it retakes the pictures and commits them, then the guide rebuilds).
 - Add a feature: add a short chapter (or a paragraph in the closest chapter) in plain words, then one line in the contents happens by itself.
+
+## Plain-language helpers (results summary, account help, example tags, return presets)
+- Results top: `planSummaryHtml()` (the "Your plan in a few lines" box, called from `renderResultsUi`), the hero `todayNote` (today's-dollars line) and the "growth" label on year cards. Folds are named "What if? Test your plan" and "Technical details and assumptions".
+- Step 2 cards: `ACCT_HELP` (one sentence under each account name, matched on the card title) and `cardSummary()` (collapsed line: balance, "· not adding", "· example" until the person edits the field; `markAllTouched()` runs after a plan is loaded).
+- Step 3 return presets: `applyReturnPreset(pre, post)` and the three buttons in `#retPresets` (Cautious 4/3, Balanced 6/4.5, Optimistic 7.5/5.5); `updateReturnPresets()` highlights the matching one.
+- English only: no French entries needed.
