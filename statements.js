@@ -391,7 +391,19 @@ function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '
 function fmt(v) { return '$' + (Math.round(v * 100) / 100).toLocaleString('en-CA', { minimumFractionDigits: 0, maximumFractionDigits: 2 }); }
 function msg(cls, text) { return '<div class="ai-msg ' + cls + '">' + esc(text) + '</div>'; }
 function isCouple() { var m = document.getElementById('calcMode'); return !!m && m.value === 'couple'; }
-function targetId(who) { return who === 'spouse' ? 'spouseCppMonthlyAmt' : 'cppMonthlyAmt'; }
+function targetId(who) { return (who === 'spouse' && !hhOn()) ? 'spouseCppMonthlyAmt' : 'cppMonthlyAmt'; }
+// couple (household) mode: each person has their own form; a statement can be filed for the person on screen or for the other one
+function hhOn() { return isCouple() && typeof HH !== 'undefined' && !!HH; }
+function openWho() { return (hhOn() && HH.who === 'spouse') ? 'spouse' : 'me'; }
+function whoName(w) { try { if (typeof hhLabel === 'function') return hhLabel(w === 'spouse' ? 'sp' : 'me'); } catch (e) { /* ignore */ } return w === 'spouse' ? 'my spouse' : 'me'; }
+function storedOnly(w) { return hhOn() && w !== openWho(); }
+function storedProfile(w) { if (w === 'spouse' && !HH.spouse && typeof hhEnsureSpouse === 'function') hhEnsureSpouse(); return w === 'spouse' ? HH.spouse : HH.me; }
+function whoBlock() {
+    if (!hhOn()) return '';
+    var w = (state && state.forWho) || openWho();
+    function row(v) { return '<label class="ai-row"><input type="radio" name="stmtWho" value="' + v + '"' + (w === v ? ' checked' : '') + ' style="width:auto;margin:0 0.5rem 0 0"><span class="ai-lbl">' + esc(whoName(v)) + '</span></label>'; }
+    return '<div id="stmtWho" style="margin:0.5rem 0"><div style="font-weight:600">This statement is for</div>' + row('me') + row('spouse') + '</div>';
+}
 function plausible(v) { return typeof v === 'number' && v >= MIN_MONTHLY && v <= MAX_MONTHLY; }
 
 var pdfjsPromise = null;
@@ -439,9 +451,6 @@ function render() {
     var keepFile = document.getElementById('stmtFile');
     body.innerHTML = '<p style="margin:0 0 0.5rem;font-size:0.85rem;color:var(--medium-gray)">' + esc(INTRO) + '</p>' +
         '<label for="stmtFile" style="font-weight:600">Choose the PDF</label><div id="stmtFileSlot"></div>' +
-        '<div id="stmtWho" style="margin:0.5rem 0"><span style="font-weight:600">This statement is for </span>' +
-        '<label style="font-weight:400;margin-right:0.8rem"><input type="radio" name="stmtWho" value="me" checked> me</label>' +
-        '<label style="font-weight:400"><input type="radio" name="stmtWho" value="spouse"> my spouse</label></div>' +
         '<div id="stmtOut" aria-live="polite"></div>' +
         '<p style="margin:0.6rem 0 0;font-size:0.76rem">Privacy: the file never leaves this page. Always check the numbers against your statement before relying on them.</p>';
     var slot = document.getElementById('stmtFileSlot');
@@ -451,11 +460,6 @@ function render() {
         inp.type = 'file'; inp.id = 'stmtFile'; inp.accept = '.pdf,application/pdf';
         inp.addEventListener('change', onFile);
         slot.appendChild(inp);
-    }
-    var radios = body.querySelectorAll('input[name=stmtWho]');
-    for (var i = 0; i < radios.length; i++) {
-        radios[i].checked = (radios[i].value === ((state && state.forWho) || 'me'));
-        radios[i].addEventListener('change', function () { if (state) state.forWho = this.value; renderResult(); });
     }
     renderResult();
 }
@@ -488,8 +492,10 @@ function estimateHtml(r) {
     h += '</div>';
     var who = (state && state.forWho) || 'me';
     if (who === 'spouse' && !isCouple()) return h + msg('bad', 'Switch “Who is this plan for?” to couple mode to apply a spouse statement.');
-    var el = document.getElementById(targetId(who)), cur = el ? parseFloat(el.value) : NaN;
-    return h + msg('', 'Will set “' + (who === 'spouse' ? 'Spouse CPP per month at 65' : 'CPP per month at 65') + '”' + (isFinite(cur) ? ' (now ' + fmt(cur) + ')' : '') + '. The planner adjusts for your start age itself.') +
+    var cur;
+    if (storedOnly(who)) { var sp0 = storedProfile(who); cur = sp0 ? parseFloat(sp0.cppMonthlyAmt) : NaN; }
+    else { var el = document.getElementById(targetId(who)); cur = el ? parseFloat(el.value) : NaN; }
+    return h + msg('', 'Will set ' + (hhOn() ? 'the CPP per month at 65 for ' + whoName(who) : '“' + (who === 'spouse' ? 'Spouse CPP per month at 65' : 'CPP per month at 65') + '”') + (isFinite(cur) ? ' (now ' + fmt(cur) + ')' : '') + '. The planner adjusts for your start age itself.') +
         '<div class="btn-row"><button type="button" class="save-btn" id="stmtApply">Apply</button></div>';
 }
 
@@ -500,7 +506,9 @@ function renderResult() {
     if (state.error) { out.innerHTML = msg('bad', MSGS[state.error]); return; }
     var r = state.result;
     if (!r || !r.rows.length) { out.innerHTML = msg('bad', MSGS.notFound); return; }
-    out.innerHTML = summaryHtml(r) + estimateHtml(r);
+    out.innerHTML = whoBlock() + summaryHtml(r) + estimateHtml(r);
+    var radios = out.querySelectorAll('input[name=stmtWho]');
+    for (var ri = 0; ri < radios.length; ri++) radios[ri].addEventListener('change', function () { if (state) state.forWho = this.value; renderResult(); });
     var ap = document.getElementById('stmtApply');
     if (ap) ap.addEventListener('click', function () {
         var c = out.querySelector('input[name=stmtChoice]:checked');
@@ -509,11 +517,17 @@ function renderResult() {
 }
 
 function setValue(v) {
-    var el = document.getElementById(targetId((state && state.forWho) || 'me'));
-    if (!el) return;
-    el.value = String(v);
-    el.dispatchEvent(new Event('input', { bubbles: true }));
-    el.dispatchEvent(new Event('change', { bubbles: true }));
+    var w0 = (state && state.forWho) || 'me';
+    if (storedOnly(w0)) {
+        var sp1 = storedProfile(w0); if (!sp1) return;
+        sp1.cppMonthlyAmt = v;   // the other person's saved form; they see it when you switch to them
+    } else {
+        var el = document.getElementById(targetId(w0));
+        if (!el) return;
+        el.value = String(v);
+        el.dispatchEvent(new Event('input', { bubbles: true }));
+        el.dispatchEvent(new Event('change', { bubbles: true }));
+    }
     if (typeof window.refreshCollapsibleSummaries === 'function') { try { window.refreshCollapsibleSummaries(); } catch (e) { /* ignore */ } }
     if (typeof window.showSaveBadge === 'function') { try { window.showSaveBadge('✓ Applied'); } catch (e) { /* ignore */ } }
     var out = document.getElementById('stmtOut');
@@ -524,8 +538,7 @@ function onFile(ev) {
     var f = ev.target.files && ev.target.files[0];
     var out = document.getElementById('stmtOut');
     if (!f) return;
-    var who = (document.querySelector('input[name=stmtWho]:checked') || {}).value || 'me';
-    state = { forWho: who };
+    state = { forWho: hhOn() ? openWho() : 'me' };
     if (!(/\.pdf$/i.test(f.name) || f.type === 'application/pdf')) { state.error = 'notPdf'; renderResult(); return; }
     if (out) out.innerHTML = msg('', 'Reading the PDF…');
     var rd = new FileReader();
