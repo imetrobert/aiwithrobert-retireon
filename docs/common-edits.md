@@ -111,7 +111,7 @@ Step 1 asks "Are you filling this out for you, or for you and a spouse?". Choosi
 ## Update the user guide (guide.pdf)
 The guide is written in Markdown: `docs/guide/en.md`. Find the chapter by its `# Title`, change the words, commit to main. The **Build guide** workflow rebuilds `guide.pdf` (about a minute; check the Actions tab is green). Markup is in `docs/guide/README.md`. Do not edit `guide.pdf` itself.
 - A button was renamed: search the .md for the old name and replace it everywhere.
-- Screens look different: Actions, **Guide screenshots**, Run workflow (it retakes the pictures and commits them, then the guide rebuilds).
+- Screens look different: Actions, **Guide screenshots**, Run workflow (it retakes the pictures and commits them), then Actions, **Build guide**, Run workflow to rebuild the PDF (a bot commit does not start it by itself).
 - Add a feature: add a short chapter (or a paragraph in the closest chapter) in plain words, then one line in the contents happens by itself.
 
 ## Plain-language helpers (results summary, account help, example tags, return presets)
