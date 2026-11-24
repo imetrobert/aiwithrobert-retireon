@@ -79,6 +79,7 @@ This screen asks who the plan is for and when you want to retire.
 2. **Name this plan.** Optional, for example "Base case" or "Retire at 60". Helpful when you save several versions.
 3. **Are you filling this out for you, or for you and a spouse?** "Just me", or "Me and my spouse". The couple option is explained in its own chapter. Choose it only if your spouse is willing to share their financial details with you, because you will both see each other's figures.
 4. **Your age today and the age you want to retire.** Tick **I am already retired** if you have stopped working.
+5. **Will you have other income during retirement?** Choose **No** (the default) or **Yes** if you expect part-time work, rental, business or similar income. Only **Yes** adds a card in Step 2. Do not count CPP, OAS or an employer pension here: they have their own cards.
 
 
 Near the bottom of Step 1 are two optional shortcuts, both closed until you open them:
@@ -100,6 +101,7 @@ Tap a card to open it. **Expand all** and **Collapse all** open or close every c
 5. **Locked-in account (LIRA / LIF).** Balance, yearly additions, and who regulates it: Ontario (most employers) or Federal (banks, telecoms, airlines, railways). Ontario LIFs use the Ontario maximum table; federal LIFs use the federal formula. Enter your own yearly cap only if your statement shows one. Tick **Unlock half of my locked-in money** and choose an age (55 or later) to model the one-time 50% transfer to an RRSP/RRIF.
 6. **Your employer pension.** Fixed benefit for life (DB), Growing savings account (DC) or Both.
 7. **Non-registered savings.** Fill in if you have them.
+8. **Other income during retirement.** Only shown if you answered Yes in Step 1. See the chapter on other income.
 
 > **Tip**
 > Every card has a blue **Why this matters** button. Tap it any time you are unsure what a question means.
@@ -174,6 +176,22 @@ Tap any year in **What to do each year**. It opens into a **Do this** list, in t
 
 > **Who withholds tax at source?**
 > Yes: employer pension payments, LIRA/LIF, RRSP/RRIF and unlocked RRSP/RRIF, on the part above the yearly minimum (an RRSP before 71 and a brand-new unlocked account withhold everything). No: non-registered savings and TFSA. Tax withheld is credited when you file your return.
+
+# Other income in retirement
+eyebrow: STEP 2 TOOL
+Some people expect income besides pensions and savings: part-time work, rent from a property, a small business. This is optional. If you answered **Yes** to "Will you have other income during retirement?" in Step 1, a card **Other income during retirement** appears in Step 2. If you answered No, nothing changes.
+
+- **One amount for every year.** Type the income you expect each year, before tax. It is used for every year of your retirement.
+- **A different amount each year.** Tap **Optional: enter a different amount for each year**. The planner builds the list for you from your age today, the age you retire (Step 1) and the age you plan until (Step 3): one row per year, with your age and the calendar year already filled in. You only type the income expected that year. Leave a year blank if you expect nothing. **Fill every year** copies one amount into every row.
+- Tap **Save for this scenario**. Your single yearly box turns grey. To change the list tap **Edit the list**, or **Stop using the list** to type one amount again.
+- **Which dollars?** Choose on the card. **Today's dollars (plus inflation)** raises the amounts for inflation each year, like your spending. **Dollars of each year (no inflation)** uses the numbers exactly as you typed them.
+- If you change your age or retirement age later, the list follows. The amounts you typed stay with the same ages.
+
+> **How it is taxed**
+> The planner treats this money as ordinary taxable income (like work, rental or business income). It lowers the withdrawals you need from your savings, and it can raise your tax and the OAS clawback. It is not treated as pension income. Leave out money that is tax-free.
+
+> **Couples**
+> In "Me and my spouse" mode each of you answers for yourself, in your own form.
 
 # The expense list
 eyebrow: STEP 2 TOOL
